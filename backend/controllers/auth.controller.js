@@ -3,6 +3,8 @@ import { User } from "../models/user.model.js";
 // for password hashing
 import bcryptjs from "bcryptjs";
 
+import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
+
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
   try {
@@ -38,6 +40,16 @@ export const signup = async (req, res) => {
 
     //jwt
     generateTokenAndSetCookie(res, user._id);
+
+    res.status(201).json({
+      success: true,
+      message: "User created successfully",
+      // spreading the user object to get all the user data then making the password null
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
   } catch (error) {
     res.status(400).json({
       success: false,
