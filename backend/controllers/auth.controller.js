@@ -1,9 +1,16 @@
 import { User } from "../models/user.model.js";
 
+import crypto from "crypto"; // for generating random tokens
+
 // for password hashing
 import bcryptjs from "bcryptjs";
 
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
+import {
+  sendVerificationEmail,
+  sendWelcomeEmail,
+  sendPasswordResetEmail,
+} from "../mailtrap/emails.js";
 
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
@@ -41,6 +48,8 @@ export const signup = async (req, res) => {
     //jwt
     generateTokenAndSetCookie(res, user._id);
 
+    await sendVerificationEmail(user.email, verificationToken);
+
     res.status(201).json({
       success: true,
       message: "User created successfully",
@@ -58,10 +67,143 @@ export const signup = async (req, res) => {
   }
 };
 
+export const verifyEmail = async (req, res) => {
+  // 1 2 3 4 5 6
+  const { code } = req.body;
+  try {
+    const user = await User.findOne({
+      verificationToken: code,
+      // checking if the token is not expired
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired verification code",
+      });
+    }
+    //  turning is vrified in the database to true
+    user.isVerified = true;
+
+    // changing the verification token and expires at in database to null
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    // saving the user to the database
+    await user.save();
+
+    await sendWelcomeEmail(user.email, user.name);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
+  } catch (error) {
+    console.error("Error in verify email:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
 export const login = async (req, res) => {
-  res.send("login route");
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+    // checking if the password is correct
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid credentials",
+      });
+    }
+    generateTokenAndSetCookie(res, user._id);
+    user.lastLogin = new Date();
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Login successful",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
+  } catch (error) {
+    console.log("Error in login:", error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 export const logout = async (req, res) => {
-  res.send("logout route");
+  // clearing the cookie
+  res.clearCookie("token");
+  res.status(200).json({ sucess: true, message: "Logged out successfully" });
+};
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    // Generate reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiresAt = resetTokenExpiresAt;
+
+    await user.save();
+
+    //send email
+    // reset url
+    await sendPasswordResetEmail(
+      user.email,
+      `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+    ); // replace with your frontend URL
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset link sent to your email",
+    });
+  } catch (error) {
+    console.log("Error in forgot password:", error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    // find the user
+    const user = await user.findOne({
+      resetPasswordToken: token,
+    });
+  } catch (error) {}
 };
