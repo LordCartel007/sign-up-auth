@@ -10,6 +10,7 @@ import {
   sendVerificationEmail,
   sendWelcomeEmail,
   sendPasswordResetEmail,
+  sendResetSuccessEmail,
 } from "../mailtrap/emails.js";
 
 export const signup = async (req, res) => {
@@ -201,9 +202,54 @@ export const resetPassword = async (req, res) => {
     const { token } = req.params;
     const { password } = req.body;
 
-    // find the user
-    const user = await user.findOne({
+    // find the user and change token
+    const user = await User.findOne({
       resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() },
     });
-  } catch (error) {}
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired reset token",
+      });
+    }
+    //update password
+    const hashedPassword = await bcryptjs.hash(password, 10);
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresAt = undefined;
+    await user.save();
+
+    await sendResetSuccessEmail(user.email);
+
+    res
+      .status(200)
+      .json({ sucess: true, message: "Password reset successfully" });
+  } catch (error) {
+    console.log("Error in reset password:", error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const checkAuth = async (req, res) => {
+  try {
+    // removing password from the user object by using select -password
+    const user = await user.findById(req.userId).select("-password");
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.status(200).json({ sucess: true, user });
+  } catch (error) {
+    console.log("Error in checkAuth:", error);
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
