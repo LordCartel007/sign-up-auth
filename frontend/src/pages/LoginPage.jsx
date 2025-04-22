@@ -7,7 +7,7 @@ import Input from "../components/Input";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const isLoading = true; // Simulating loading state
+  const isLoading = false; // Simulating loading state
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -64,8 +64,16 @@ const LoginPage = () => {
           focus:ring-2 focus:ring-green-500 focus:ring-offset-2 
           focus:ring-offset-gray-900 transition duration duration-200"
             type="submit"
+            disabled={isLoading}
           >
-            Login
+            {isLoading ? (
+              <Loader
+                className="w-6 h-6 animate-spin
+            mx-auto"
+              />
+            ) : (
+              "Login"
+            )}
           </motion.button>
         </form>
       </div>
