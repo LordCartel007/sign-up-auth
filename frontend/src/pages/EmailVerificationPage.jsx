@@ -47,8 +47,9 @@ const EmailVerificationPage = () => {
     const verificationCode = code.join("");
     try {
       await verifyEmail(verificationCode);
-      navigate("/");
+
       toast.success("Email verified successfully!");
+      navigate("/");
     } catch (error) {
       console.log(error);
     }

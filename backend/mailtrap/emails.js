@@ -132,7 +132,7 @@ export const sendWelcomeEmail = async (email, name) => {
     const response = await transporter.sendMail({
       from: sender,
       to: recipient,
-      subject: "Password Reset Successful",
+      subject: "Welcome",
       html: WELCOME_EMAIL_TEMPLATE,
       category: "Welcome ",
     });

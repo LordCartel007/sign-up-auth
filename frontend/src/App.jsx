@@ -7,6 +7,9 @@ import LoginPage from "./pages/LoginPage";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import { Toaster } from "react-hot-toast";
 import { useAuthStore } from "./store/authStore";
+import LoadingSpinner from "./components/LoadingSpinner";
+
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 //protect routes that require authentication
 const ProtectedRoute = ({ children }) => {
@@ -33,13 +36,14 @@ const RedirectAuthenticatedUser = ({ children }) => {
 };
 
 function App() {
-  const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
+  const { isCheckingAuth, checkAuth } = useAuthStore();
   useEffect(() => {
     checkAuth();
   }, [checkAuth]);
 
-  console.log("isAuthenticated", isAuthenticated);
-  console.log("user", user);
+  if (isCheckingAuth) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="  min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-emerald-900 flex items-center justify-center relative overflow-hidden">
@@ -90,6 +94,15 @@ function App() {
           }
         />
         <Route path="/verify-email" element={<EmailVerificationPage />} />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <RedirectAuthenticatedUser>
+              <ForgotPasswordPage />
+            </RedirectAuthenticatedUser>
+          }
+        />
       </Routes>
       <Toaster />
     </div>

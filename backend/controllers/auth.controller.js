@@ -14,7 +14,8 @@ import {
 } from "../mailtrap/emails.js";
 
 export const signup = async (req, res) => {
-  const { email, password, name } = req.body;
+  const email = req.body.email.toLowerCase(); // 👈 making email lower case
+  const { password, name } = req.body;
   try {
     if (!email || !password || !name) {
       throw new Error("All fields are required");
@@ -84,7 +85,7 @@ export const verifyEmail = async (req, res) => {
         message: "Invalid or expired verification code",
       });
     }
-    //  turning is vrified in the database to true
+    //  turning is verified in the database to true
     user.isVerified = true;
 
     // changing the verification token and expires at in database to null
@@ -113,7 +114,8 @@ export const verifyEmail = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { email, password } = req.body;
+  const email = req.body.email.toLowerCase();
+  const { password } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) {
