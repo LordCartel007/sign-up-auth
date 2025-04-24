@@ -89,6 +89,7 @@ import {
   PASSWORD_RESET_REQUEST_TEMPLATE,
   VERIFICATION_EMAIL_TEMPLATE,
   PASSWORD_RESET_SUCCESS_TEMPLATE,
+  WELCOME_EMAIL_TEMPLATE,
 } from "./emailTemplates.js";
 
 const transporter = nodemailer.createTransport({
@@ -128,16 +129,14 @@ export const sendWelcomeEmail = async (email, name) => {
   const recipient = email;
 
   try {
-    await transporter.sendMail({
+    const response = await transporter.sendMail({
       from: sender,
       to: recipient,
-      // from mail trap email template
-      template_uuid: "fe50ed5c-f917-4a66-a5a9-deaf3e8ff52f",
-      template_variables: {
-        company_info_name: "AutoCartel",
-        name: "Cartel",
-      },
+      subject: "Password Reset Successful",
+      html: WELCOME_EMAIL_TEMPLATE,
+      category: "Welcome ",
     });
+
     console.log("Welcome Email sent successfully");
   } catch (error) {
     console.error(`Error sending welcome email:`, error);
