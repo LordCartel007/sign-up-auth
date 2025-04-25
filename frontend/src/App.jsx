@@ -112,6 +112,8 @@ function App() {
             </RedirectAuthenticatedUser>
           }
         />
+        {/* Catch-all route for 404 Not Found */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
 
       <Toaster />
