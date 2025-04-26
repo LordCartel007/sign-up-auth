@@ -1,6 +1,7 @@
 import React from "react";
 
 //renaming icon to Icon since it is a react component
+//reusing the same input component for login and signup
 const Input = ({ icon: Icon, ...props }) => {
   return (
     <div className="relative mb-6">
