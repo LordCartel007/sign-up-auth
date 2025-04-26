@@ -6,6 +6,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
 import Input from "../components/Input";
 import toast from "react-hot-toast";
+
+// reset password page
 const ResetPasswordPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
