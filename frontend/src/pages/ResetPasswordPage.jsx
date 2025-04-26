@@ -1,10 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { useAuthStore } from "../store/authStore";
+import { useAuthStore } from "@/store/authStore";
 import { useParams, useNavigate } from "react-router-dom";
 import { Lock } from "lucide-react";
-import Input from "../components/Input";
+import Input from "@/components/Input";
 import toast from "react-hot-toast";
 
 // reset password page
