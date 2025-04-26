@@ -2,3 +2,9 @@ package-lock.json
 .env
 node_modules
 .gitignore
+dist 
+*.log
+*.env
+*.env.local
+*.env.development
+dist-sst
