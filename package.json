@@ -22,7 +22,8 @@
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^4.0.0",
     "mongoose": "^8.13.2",
-    "nodemailer": "^6.10.1"
+    "nodemailer": "^6.10.1",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
