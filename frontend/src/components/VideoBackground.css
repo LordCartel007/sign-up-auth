@@ -1,0 +1,56 @@
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html,
+body {
+  min-height: 100vh;
+  touch-action: auto;
+  overflow-x: hidden;
+}
+
+.containervideo {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+
+  overflow: hidden;
+  margin-bottom: 0%;
+}
+
+.background-clip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Add a separate overlay */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
+}
+
+/* Content should be above the overlay */
+.content {
+  z-index: 1;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  align-items: center;
+}
+
+.center {
+  justify-self: center;
+}

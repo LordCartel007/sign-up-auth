@@ -17,6 +17,8 @@ import HomePage from "./pages/HomePage";
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, user } = useAuthStore();
 
+  console.log(isAuthenticated);
+
   if (!isAuthenticated) {
     return <Navigate to="/homepage" replace />;
   }

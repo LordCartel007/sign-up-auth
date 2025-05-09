@@ -117,8 +117,8 @@ export default function Header() {
             <NavLink2 to={"/login"} onClick={() => setMobileNavActive(false)}>
               Login
             </NavLink2>
-            <NavLink2 to={"/contact"} onClick={() => setMobileNavActive(false)}>
-              Contact Us
+            <NavLink2 to={"/signup"} onClick={() => setMobileNavActive(false)}>
+              Sign Up
             </NavLink2>
             {/* Link to chat web app */}
             <ExternalLink to="https://chatcartel.autocartel.shop">
