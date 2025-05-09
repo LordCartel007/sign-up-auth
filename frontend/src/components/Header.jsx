@@ -103,7 +103,7 @@ export default function Header() {
     <StyledHeader>
       <Center>
         <Wrapper>
-          <Logo href={"/"}>Auto-Cartel</Logo>
+          <Logo to={"/"}>Cartel Ai</Logo>
 
           <NavOverlay
             $mobileNavActive={mobileNavActive}
@@ -111,7 +111,7 @@ export default function Header() {
           />
 
           <StyledNav $mobileNavActive={mobileNavActive}>
-            <NavLink2 to="/" onClick={() => setMobileNavActive(false)}>
+            <NavLink2 to="/homepage" onClick={() => setMobileNavActive(false)}>
               Home
             </NavLink2>
             <NavLink2 to={"/login"} onClick={() => setMobileNavActive(false)}>
@@ -124,9 +124,6 @@ export default function Header() {
             <ExternalLink to="https://chatcartel.autocartel.shop">
               Message Us
             </ExternalLink>
-            <NavLink2 to={"/cart"} onClick={() => setMobileNavActive(false)}>
-              Cart
-            </NavLink2>
           </StyledNav>
           <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
             <BarsIcon />

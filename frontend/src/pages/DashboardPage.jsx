@@ -17,6 +17,17 @@ const DashboardPage = () => {
   const handleLogout = async () => {
     logout();
   };
+
+  const handleLink = async () => {
+    window.location.href = "https://cartel-chat-bot.vercel.app/";
+  };
+  if (user && !user.isVerified) {
+    return (
+      <div className="text-center text-red-400 mt-20 text-xl font-semibold">
+        Your email is not verified. Please check your inbox to verify.
+      </div>
+    );
+  }
   return (
     <>
       <Header />
@@ -34,8 +45,8 @@ const DashboardPage = () => {
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.5 }}
             className="max-w-md w-full mx-auto
-    mt-10 p-8 bg-gray-900 bg-opacity-80
-    backdrop-filter backdrop-blur-lg rounded-xl
+    mt-10 p-8 
+    backdrop-filter  rounded-xl
     shadow-2xl border border-gray-800
     "
           >
@@ -97,14 +108,25 @@ const DashboardPage = () => {
               className="mt-4"
             >
               <motion.button
+                className=" max-w-md w-full py-3 px-4 bg-gradient-to-r from-green-500
+       to-emerald-600 text-white  rounded-lg shadow-lg
+       hover:from-green-600 hover:to-emerald-700
+       focus:outline-none focus:ring-2 focus:ring-green-500
+       focus:ring-offset-2 focus:ring-offset-gray-900 font-extrabold 
+       "
+                onClick={handleLink}
+              >
+                <h1> Visit Ai</h1>
+              </motion.button>
+              <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLogout}
-                className="w-full py-3 px-4 bg-gradient-to-r from-green-500
+                className="button w-full py-3 px-4 bg-gradient-to-r from-green-500
        to-emerald-600 text-white font-bold rounded-lg shadow-lg
        hover:from-green-600 hover:to-emerald-700
        focus:outline-none focus:ring-2 focus:ring-green-500
-       focus:ring-offset-2 focus:ring-offset-gray-900
+       focus:ring-offset-2 focus:ring-offset-gray-900 mt-3
        "
               >
                 Logout

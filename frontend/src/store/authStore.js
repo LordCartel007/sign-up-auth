@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const API_URL = "https://signup-auth-backend.vercel.app/api/auth";
 
@@ -89,11 +90,15 @@ export const useAuthStore = create((set) => ({
         error: null,
       });
     } catch (error) {
-      set({
-        error: error.response?.data?.message || "Error logging in",
-        isLoading: false,
-      });
-      throw error;
+      if (error.response?.data?.redirectToVerify) {
+        return { redirectToVerify: true }; // 👈 your verify route
+      } else {
+        set({
+          error: error.response?.data?.message || "Error logging in",
+          isLoading: false,
+        });
+        toast.error(error.response?.data?.message || "Login failed");
+      }
     }
   },
 

@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/authStore.js";
 import Header from "../components/Header.jsx";
 import styled from "styled-components";
 import "../components/VideoBackground.css";
+import { useNavigate } from "react-router-dom";
 
 const StyledDiv = styled.div`
   @media screen and (max-width: 767px) {
@@ -14,6 +15,7 @@ const StyledDiv = styled.div`
 `;
 
 const LoginPage = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -21,7 +23,12 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    await login(email, password);
+    const result = await login(email, password);
+    if (result?.redirectToVerify) {
+      navigate("/verify-email");
+    } else if (result?.success) {
+      navigate("/dashboard");
+    }
   };
 
   return (
